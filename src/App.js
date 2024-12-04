@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import ChartRace from './component/Chart';
+import { Spin } from 'antd';
+import { LoadingOutlined } from '@ant-design/icons';
 
 const App = () => {
   const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true)
   const [dataToChart, setDataToChart] = useState([]);
   const [year, setYear] = useState(1951)
 
@@ -11,6 +14,7 @@ const App = () => {
     try {
       const res = await axios.get(`https://chart-race-api.vercel.app/api/getdata?years=${year}`)
       setData(res.data);
+      setLoading(false)
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -30,7 +34,6 @@ const App = () => {
       setDataToChart(dataToChartRace);
     }
   }, [data]);
-  console.log(data)
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -58,14 +61,15 @@ const App = () => {
         <div style={{ width: '20px', height: '20px', backgroundColor: 'rgb(255, 197, 2)', borderRadius: '20%' }}></div>
         <p>Americas</p>
       </div>
-      {dataToChart.length > 0 && (
-        <div style={{ position: 'relative', width: '760px', margin: 'auto' }}>
+
+      <div style={{ position: 'relative', width: '760px', margin: 'auto' }}>
+        <Spin spinning={loading} size="large" tip="Loading" indicator={<LoadingOutlined spin />}>
           <ChartRace data={dataToChart} years={year} />
-          <div style={{ position: 'absolute', color: 'black', zIndex: '999', fontSize: '80px', bottom: '10px', right: '10px' }}>
-            {year}
+          <div style={{ position: 'fixed',bottom:'0px',right:'175px',padding:'10px', fontSize: '80px' }}>
+            {!loading ? year : null}
           </div>
-        </div>
-      )}
+        </Spin>
+      </div>
     </div>
   );
 };
