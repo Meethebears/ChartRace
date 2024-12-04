@@ -110,7 +110,7 @@ const ChartRace = ({ data, year }) => {
                 />
               </Bar>
               <Value position={(item.value / maxValue) * 100}>
-                {item.value}
+                {item.value.toLocaleString()}
               </Value>
             </BarContainer>
           </div>
