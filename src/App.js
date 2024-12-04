@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-// import ChartRace from 'react-chart-race';
 import axios from 'axios';
 import ChartRace from './component/Chart';
 
@@ -59,21 +58,6 @@ const App = () => {
         <div style={{ width: '20px', height: '20px', backgroundColor: 'rgb(255, 197, 2)', borderRadius: '20%' }}></div>
         <p>Americas</p>
       </div>
-      {/* <div style={{ position: 'relative', width: '760px',margin:'auto' }}>
-        <ChartRace
-          data={dataToChart}
-          backgroundColor='#000'
-          width={760}
-          padding={12}
-          itemHeight={58}
-          gap={12}
-          titleStyle={{ font: 'normal 400 13px Arial', color: '#fff' }}
-          valueStyle={{ font: 'normal 400 11px Arial', color: 'rgba(255,255,255,0.42)' }}
-        />
-        <div style={{ position: 'absolute', color: 'white', zIndex: '999', fontSize: '80px', bottom: '10px', right: '10px' }}>
-          {year}
-        </div>
-      </div> */}
       {dataToChart.length > 0 && (
         <div style={{ position: 'relative', width: '760px', margin: 'auto' }}>
           <ChartRace data={dataToChart} years={year} />
@@ -87,30 +71,3 @@ const App = () => {
 };
 
 export default App;
-
-//---------------- Libary RacingBars -----------------------------
-
-// import RacingBars from "racing-bars/react";
-
-// export default function App() {
-//   const options = {
-//     dataUrl: "https://racing-bars.hatemhosny.dev/data/population.csv",
-//     dataTransform: (data) =>
-//       data.map((d) => ({
-//         ...d,
-//         icon: `https://flagsapi.com/${d.code}/flat/64.png`,
-//       })),
-//     title: "World Population in 60 Years",
-//     subTitle: "Country Population in millions",
-//     caption: "Source: World Bank",
-//     dateCounter: "YYYY",
-//     showIcons: true,
-//     labelsPosition: "outside",
-//   };
-
-//   return (
-//     <div>
-//       <RacingBars className="race" {...options}>Loading...</RacingBars>
-//     </div>
-//   )
-// }
