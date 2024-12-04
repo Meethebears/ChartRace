@@ -22,7 +22,6 @@ const Value = styled.div`
   position: absolute;
   left: ${(props) => Math.min(props.position, 100)}%;
   top: 50%;
-  transform: translateY(-50%)
   color: black;
   font-weight: bold;
   white-space: nowrap;
