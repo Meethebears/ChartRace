@@ -3,6 +3,7 @@ import axios from 'axios';
 import ChartRace from './component/Chart';
 import { Spin } from 'antd';
 import { LoadingOutlined } from '@ant-design/icons';
+import ChartRaceLib from './component/ChartRace'
 
 const App = () => {
   const [data, setData] = useState([]);
@@ -43,6 +44,14 @@ const App = () => {
     return () => clearInterval(interval);
   }, []);
 
+  const datas = [
+    { id: 1, title: 'USA', value: 100, color: 'blue' },
+    { id: 2, title: 'China', value: 90, color: 'red' },
+    { id: 3, title: 'India', value: 85, color: 'green' },
+    { id: 4, title: 'Russia', value: 70, color: 'yellow' },
+    { id: 5, title: 'Japan', value: 60, color: 'purple' }
+  ];
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
       <div style={{ display: 'flex', justifyContent: 'center' }}>
@@ -64,8 +73,9 @@ const App = () => {
 
       <div style={{ position: 'relative', width: '760px', margin: 'auto' }}>
         <Spin spinning={loading} size="large" tip="Loading" indicator={<LoadingOutlined spin />}>
-          <ChartRace data={dataToChart} years={year} />
-          <div style={{ position: 'fixed',bottom:'0px',right:'175px',padding:'10px', fontSize: '80px' }}>
+          {/* <ChartRace data={dataToChart} years={year} /> */}
+          <ChartRaceLib data={dataToChart} />
+          <div style={{ position: 'fixed', bottom: '0px', right: '175px', padding: '10px', fontSize: '80px' }}>
             {!loading ? year : null}
           </div>
         </Spin>

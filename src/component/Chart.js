@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import styled from 'styled-components';
 
 const BarContainer = styled.div`
@@ -15,7 +15,7 @@ const Bar = styled.div`
   height: 100%;
   background-color: ${(props) => props.color};
   border-radius: 5px;
-  transition: width 1s ease-in-out;
+  transition: all 1600ms;
 `;
 
 const Value = styled.div`
@@ -28,17 +28,7 @@ const Value = styled.div`
   max-width: 100%;
   text-overflow: ellipsis;
   transition: all 1s ease-in-out;
-  animation: count-up 1s ease-out forwards;
-  @keyframes count-up {
-    from {
-      transform: translateY(-50%) translateX(10%) scale(0.9);
-      opacity: 0;
-    }
-    to {
-      transform: translateY(-50%) translateX(10%) scale(1);
-      opacity: 1;
-    }
-  }
+  transform: translateY(-50%) translateX(10%) scale(1);
 `;
 
 const Flag = styled.img`
@@ -80,43 +70,59 @@ const CheckRegion = (title) => {
     case 'UK':
     case 'Italy':
     case 'France':
-      return 'rgb(150, 84, 229)'
+      return 'rgb(150, 84, 229)';
     case 'USA':
     case 'Brazil':
-      return 'rgb(255, 197, 2)'
+      return 'rgb(255, 197, 2)';
+    default:
+      return '#ccc'; // Default color if country is not found
   }
-}
+};
 
-const ChartRace = ({ data, year }) => {
-  const maxValue = Math.max(...data.map((item) => item.value));
-  const sortedData = [...data].sort((a, b) => b.value - a.value);
+const ChartRace = ({ data, year,...props }) => {
+  // Calculate max value and sorted data using useMemo for performance optimization
+  const maxValue = useMemo(() => Math.max(...data.map((item) => item.value)), [data]);
+  const sortedData = useMemo(() => [...data].sort((a, b) => b.value - a.value), [data]);
 
   return (
-    <div>
-      {sortedData.map((item) => {
+    <div style={{ boxSizing: 'border-box' }}>
+      {sortedData.map((item, index) => {
+        // Get flag image URL for the country
         const flagObj = ImgFlag.find((element) => element.title === item.title);
-        const flagUrl = flagObj ? flagObj.img : '';
+        const flagUrl = flagObj ? flagObj.img : ''
+        const indis = sortedData.findIndex(temp => temp.id === item.id);
+        const translateY = indis === 0 ? props.padding : (props.padding + (indis * props.itemHeight) + (indis * props.gap));
+
+        // Calculate position percentage for flag and value display
+        const position = (item.value / maxValue) * 100;
 
         return (
-          <div key={item.id} style={{ marginBottom: '10px', display: 'flex', alignItems: 'center' }}>
-            <div style={{ flex: '15%', justifyContent: 'flex-end', display: 'flex', marginRight: '5px' }}>{item.title}</div>
+          <div key={item.id} style={{ display: 'flex', alignItems: 'center', transition: 'all 1200ms',transform: 'translateY(' + translateY + 'px)' }}>
+            <div style={{ flex: '15%', justifyContent: 'flex-end', display: 'flex', marginRight: '5px' }}>
+              {item.title}
+            </div>
             <BarContainer>
-              <Bar width={(item.value / maxValue) * 100} color={CheckRegion(item.title)}>
-                <Flag
-                  src={flagUrl}
-                  alt="Flag"
-                  position={(item.value / maxValue) * 100}
-                />
+              <Bar width={position} color={CheckRegion(item.title)}>
+                <Flag src={flagUrl} alt="Flag" position={position} />
               </Bar>
-              <Value position={(item.value / maxValue) * 100}>
-                {item.value.toLocaleString()}
-              </Value>
+              <Value position={position}>{item.value.toLocaleString()}</Value>
             </BarContainer>
           </div>
         );
       })}
     </div>
   );
+};
+
+ChartRace.defaultProps = {
+  data: [],
+  backgroundColor: '#f9f9f9',
+  width: 680,
+  padding: 20,
+  itemHeight: 38,
+  gap: 4,
+  titleStyle: { font: 'normal 400 13px Arial', color: '#212121' },
+  valueStyle: { font: 'normal 400 11px Arial', color: '#777' }
 };
 
 export default ChartRace;
